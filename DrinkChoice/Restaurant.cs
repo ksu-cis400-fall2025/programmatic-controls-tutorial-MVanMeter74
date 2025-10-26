@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace DrinkChoice
 {
-    public class Restaurant 
+    public class Restaurant : INotifyPropertyChanged
     {
+
+        public event PropertyChangedEventHandler? PropertyChanged;
         public string Name { get; init; }
 
         private List<SodaChoice> _possibleSodas = new List<SodaChoice>();
@@ -23,8 +25,22 @@ namespace DrinkChoice
                 SodaChoice choice = new SodaChoice(soda);
                 PossibleSodas.Add(new SodaChoice(soda));
             }
+
+            foreach (SodaChoice choice in PossibleSodas) 
+            {
+                choice.PropertyChanged += OnChosenChange;
+            }
         }
 
+        private void Choice_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnChosenChange(object sender, PropertyChangedEventArgs e)
+        { 
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NumChosen)));
+        }
         public int NumChosen
         {
             get
